@@ -1,0 +1,46 @@
+@startuml
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam DefaultFontName Arial
+skinparam shadowing false
+
+title Arquitetura de Fluxo por Cenários
+
+node "Script do Usuário (Cliente)" {
+    component "Leitura CSV & Pandas" as Ingest
+    component "Geração Hash SHA-256" as Hash
+    component "HD Wallet (Pseudônimo)" as HDW
+}
+
+node "Oráculo de Privacidade (FastAPI)" as Serv {
+    component "Motor Monte Carlo" as MC
+    component "Validação OSMnx" as OSM
+    component "Trava de Monetização" as Trava
+}
+
+cloud "Blockchain Besu (Smart Contract)" as BC
+
+' --- CENÁRIO 1 ---
+Ingest -down-> Hash
+Hash -down-> BC : **Cenário 1: Direto**\n(Carteira Real)
+note on link
+  - Sem Offset
+  - Sem Oráculo
+  - Recebimento Imediato
+end note
+
+' --- CENÁRIO 2 ---
+Hash -down-> MC : **Cenário 2: Offset**\n(Carteira Real)
+MC -down-> OSM
+OSM -down-> Trava
+Trava -down-> BC : Registro Ofuscado\n(Custódia Oráculo)
+BC -.up.> Hash : Resgate via Prova de Posse\n(Assinatura Real)
+
+' --- CENÁRIO 3 ---
+HDW -right-> MC : **Cenário 3: Anonimato Pleno**\n(Carteira Pseudônima)
+MC -down-> OSM
+OSM -down-> Trava
+Trava -down-> BC : Registro Ofuscado\n(Destinatário: Pseudônimo)
+BC -.up.> Hash : Resgate via Prova de Posse\n(Assinatura Pseudônima)
+
+@enduml

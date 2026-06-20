@@ -1,0 +1,88 @@
+# IDE
+.idea/**
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+**/__pycache__/
+myenv/
+venv/
+env/
+ENV/
+.venv/
+
+# Node
+node_modules/
+**/node_modules/
+**/package-lock.json
+
+# Logs
+logs/besu/*
+logs/quorum/*
+logs/tessera/*
+*.log
+
+# Docker runtime state
+.quorumDevQuickstart.lock
+
+# Environment files — copy from .env.example and fill in values, never commit
+**/.env
+!**/.env.example
+# Besu .env is just LOG4J config but follow the same pattern
+config/besu/.env
+
+# Secrets / TLS
+# Private keys (generate with openssl — see README)
+*.pem
+# Public keys needed by Besu and Tessera at runtime — safe to track
+!config/besu/publicRSAKey.pem
+!config/tls/publicRSAKey.pem
+# Nginx SSL (generate self-signed cert — see README)
+config/nginx/ssl/
+
+# Simulation data (large generated CSVs)
+implementacao/data/trajetos_1000/
+implementacao/data/trajetos_toyota_*/
+implementacao/data/trajetos_ofuscados/
+*.csv
+
+# ZKP build artifacts (regenerate with `npm run build` in zkp/)
+implementacao/zkp/artifacts/*.r1cs
+implementacao/zkp/artifacts/*.sym
+implementacao/zkp/artifacts/*.zkey
+implementacao/zkp/artifacts/*_js/
+implementacao/zkp/artifacts/*.wasm
+implementacao/zkp/artifacts/*.bin
+*.ptau
+
+# Circom compiler source (install separately)
+implementacao/zkp/circom/
+
+# Hardhat / Solidity
+**/artifacts/
+**/cache/
+**/build-info/
+**/*.dbg.json
+
+# Deployment outputs (machine-specific)
+implementacao/deployment_info.json
+implementacao/zkp/verifier_deployment.json
+
+# Benchmark results
+**/results/
+**/results_*/
+**/scripts/plot/charts/
+**/scripts/plot/*.pdf
+
+# macOS
+.DS_Store
+
+# Auth DB volumes
+auth/docker/volumes/

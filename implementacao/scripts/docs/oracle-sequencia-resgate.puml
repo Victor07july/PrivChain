@@ -1,0 +1,32 @@
+@startuml
+title Oracle Offset - Sequencia de Resgate por Hash
+
+actor Usuario
+participant "usuario.py" as Cliente
+participant "blockchain_sender.py" as Sender
+participant "CarbonCreditNFT_E1" as Contrato
+
+Usuario -> Cliente : Escolhe operacao Resgatar
+Usuario -> Cliente : Informa hash
+
+Cliente -> Contrato : isTrajectoryHashRegistered(hash)
+Contrato --> Cliente : true/false
+
+alt Hash registrado
+  alt Carteira real
+    Usuario -> Cliente : modo R
+    Cliente -> Sender : send_oracle_results(...)
+    Sender -> Contrato : requestRedeemByHash(hash, "")
+  else Carteira pseudonima
+    Usuario -> Cliente : modo P + pseudonimo
+    Cliente -> Sender : send_oracle_results(...)
+    Sender -> Contrato : requestRedeemByHash(hash, pseudonimo)
+  end
+  Contrato --> Sender : tx + evento HashRedeemRequested
+  Sender --> Cliente : tx_hash
+  Cliente --> Usuario : Resgate solicitado
+else Hash nao registrado
+  Cliente --> Usuario : Bloqueia envio
+end
+
+@enduml

@@ -1,0 +1,54 @@
+
+genesis-file="/config/genesis.json"
+node-private-key-file="/opt/besu/keys/nodekey"
+logging="INFO"
+data-path="/opt/besu/data"
+host-allowlist=["*"]
+min-gas-price=0
+
+# rpc
+rpc-http-authentication-enabled=true
+rpc-http-api-methods-no-auth=["eth_accounts", "eth_blockNumber", "eth_call", "eth_chainId", 
+"eth_coinbase", "eth_estimateGas", "eth_createAccessList", "eth_feeHistory" , "eth_gasPrice",
+"eth_getBalance", "eth_getBlockByHash", "eth_getBlockByNumber", "eth_getBlockTransactionCountByHash", 
+"eth_getBlockTransactionCountByNumber", "eth_getCode", "eth_getFilterChanges", 
+"eth_getFilterLogs", "eth_getLogs", "eth_getMinerDataByBlockHash", "eth_getMinerDataByBlockNumber", 
+"eth_getProof", "eth_getStorageAt", "eth_getTransactionByBlockHashAndIndex", 
+"eth_getTransactionByBlockNumberAndIndex", "eth_getTransactionByHash", "eth_getTransactionCount", 
+"eth_getTransactionReceipt", "eth_getUncleByBlockHashAndIndex", "eth_getUncleByBlockNumberAndIndex", 
+"eth_getUncleCountByBlockHash", "eth_getUncleCountByBlockNumber", "eth_mining", "eth_newBlockFilter", 
+"eth_newFilter", "eth_newPendingTransactionFilter", "eth_protocolVersion", "eth_sendRawTransaction","eth_sendTransaction",
+"eth_subscribe", "eth_syncing", "eth_uninstallFilter", "eth_unsubscribe" ]
+rpc-http-enabled=true
+rpc-http-host="0.0.0.0"
+rpc-http-port=8545
+rpc-http-cors-origins=["*"]
+
+# ws
+rpc-ws-enabled=false
+rpc-ws-host="0.0.0.0"
+rpc-ws-port=8546
+
+# graphql
+graphql-http-enabled=true
+graphql-http-host="0.0.0.0"
+graphql-http-port=8547
+graphql-http-cors-origins=["*"]
+
+# metrics
+metrics-enabled=true
+metrics-host="0.0.0.0"
+metrics-port=9545
+
+# permissions
+permissions-nodes-config-file-enabled=true
+permissions-nodes-config-file="/config/permissions_config.toml"
+
+# bootnodes
+bootnodes=["enode://8208a3f344695d44e9cf2c023683cbea7b9343e2f70a5e804bd2c93858e945f8f91439eef96a4ab6c47ff06637d6fbe6472f96de1655a1bee57ea896654f3a22@172.16.239.11:30303"]
+
+
+# Discovery at boot is set to a list of static files, but will also discover new nodes should they be added
+# static nodes
+static-nodes-file="/config/static-nodes.json"
+discovery-enabled=true

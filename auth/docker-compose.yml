@@ -1,0 +1,53 @@
+services:
+
+  auth-service:
+    platform: linux/amd64
+    container_name: auth-service
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/usr/app
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      ENV: development
+    depends_on:
+      auth-db:
+        condition: service_healthy
+      auth-service-init:
+        condition: service_completed_successfully
+
+  auth-service-init:
+    platform: linux/amd64
+    container_name: auth-service-init
+    build:
+      context: .
+      target: dev
+    command: ["/bin/bash", "./docker/api-entrypoint-scripts/docker-entrypoint.sh", "migrate"]
+    volumes:
+      - .:/usr/app
+    environment:
+      ENV: development
+    depends_on:
+      auth-db:
+        condition: service_healthy
+
+  auth-db:
+    image: postgres:16
+    container_name: auth-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: dev,test
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ./docker/volumes/postgres_data:/var/lib/postgresql/data
+      - ./docker/db-entrypoint-scripts:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+

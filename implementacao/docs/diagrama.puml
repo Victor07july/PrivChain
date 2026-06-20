@@ -1,0 +1,38 @@
+@startuml
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+
+actor "Usuário / Provedor" as User
+participant "Oráculo" as Oracle
+database "Cofre (Seed BIP-39)" as Seed
+participant "Blockchain" as BC
+
+Note over User, Oracle: Fase 1: Processamento Local
+User -> Oracle: Envia arquivo CSV original
+activate Oracle
+
+Oracle -> Oracle: Gera Identificador de Submissão\n(Baseado no conteúdo do CSV)
+Oracle -> Oracle: Calcula Distância Real
+
+Note over Oracle, Seed: Fase 2: Anonimização de Identidade
+Oracle -> Seed: Solicita Pseudônimo Rotativo\n(Usando o Hash do CSV como deslocamento)
+activate Seed
+Note right of Seed: O conteúdo do arquivo define\na nova localização na árvore de chaves.
+Seed -->> Oracle: Retorna Chave Privada + Endereço (0xABC...)
+deactivate Seed
+
+Note right of Oracle: Cada novo trajeto gera uma\nidentidade digital independente.
+
+Note over Oracle: Fase 3: Ofuscação de Trajetória
+Oracle -> Oracle: Executa Algoritmo de Offset (Monte Carlo)
+Oracle -> Oracle: Seleciona Melhor Candidato para o Alvo
+Oracle -> Oracle: Vincula a prova de integridade ao pacote
+
+Note over Oracle, BC: Fase 4: Registro On-Chain (Auditável)
+Oracle -> BC: Transação assinada com a Chave Privada\n(Contendo: Distância Ofuscada + Hash do CSV)
+deactivate Oracle
+
+BC -> BC: Registra Evento em Smart Contract
+Note right of BC: Auditoria futura exige a Seed\ne o CSV original para validar a autoria.
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+title Oracle Offset - Componentes da Implementacao
+
+skinparam componentStyle rectangle
+
+actor Usuario
+
+component "Cliente\nusuario.py" as Cliente
+component "Oraculo API\noraculo.py" as Oraculo
+component "Sender\nblockchain_sender.py" as Sender
+database "Contrato\nCarbonCreditNFT_E1.sol" as Contrato
+
+Usuario --> Cliente : Interacao local
+Cliente --> Oraculo : /processar_trajeto\n/confirmar_opcao
+Oraculo --> Sender : send_oracle_results(...)
+Cliente --> Sender : send_oracle_results(...)
+Sender --> Contrato : chamadas de metodos
+Cliente --> Contrato : leitura (hash/token)
+
+note right of Contrato
+  Metodos principais:
+  - calculateAndMintWithHash
+  - mintWithOracleValue
+  - isTrajectoryHashRegistered
+  - requestRedeemByHash
+end note
+
+@enduml

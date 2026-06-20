@@ -1,0 +1,25 @@
+@startuml
+actor Usuario
+participant "Cliente" as C
+participant "Oraculo API" as O
+participant "Prover ZK (Node)" as P
+participant "Contrato" as S
+participant "Verifier" as V
+
+Usuario -> C: Enviar trajeto
+C -> O: /processar_trajeto (trajeto + hash SHA-256)
+O -> O: Gera opcoes e estimativas
+O -> C: Top opcoes
+Usuario -> C: Escolhe opcao
+C -> O: /confirmar_opcao
+
+O -> P: Gera proof ZK (trajeto, recipient, nonce)
+P --> O: proof + poseidon_root
+
+O -> S: mintWithOracleValueZK(valor, recipient, hash_sha, root, nonce, proof)
+S -> V: verifyProof(a, b, c, [root, recipient, nonce])
+V --> S: true/false
+S --> O: tx confirmada
+O --> C: tx_hash + root
+
+@enduml

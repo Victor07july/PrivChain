@@ -1,0 +1,30 @@
+@startuml
+title Oracle Offset - Sequencia de Envio
+
+actor Usuario
+participant "usuario.py" as Cliente
+participant "oraculo.py" as Oraculo
+participant "blockchain_sender.py" as Sender
+participant "CarbonCreditNFT_E1" as Contrato
+
+Usuario -> Cliente : Escolhe operacao Enviar
+
+alt Com offset
+  Cliente -> Oraculo : POST /processar_trajeto\n(trajetoria + hash)
+  Oraculo -> Oraculo : N tentativas + Top 5 + cap monetizacao
+  Oraculo --> Cliente : opcoes estimadas + request_id
+  Usuario -> Cliente : escolhe option_index
+  Cliente -> Oraculo : POST /confirmar_opcao
+  Oraculo -> Sender : send_oracle_results(...)
+  Sender -> Contrato : mintWithOracleValue(...)
+  Contrato --> Sender : tx
+  Sender --> Oraculo : tx_hash
+  Oraculo --> Cliente : confirmacao + tx_hash
+else Sem offset
+  Cliente -> Sender : send_oracle_results(...)
+  Sender -> Contrato : calculateAndMintWithHash(...)
+  Contrato --> Sender : tx
+  Sender --> Cliente : tx_hash
+end
+
+@enduml
