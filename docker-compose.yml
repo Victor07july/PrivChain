@@ -260,18 +260,18 @@ services:
       besu-network:
         ipv4_address: 172.16.239.19
 
-  chain-explorer:
-    image: consensys/quorum-explorer:${QUORUM_EXPLORER_VERSION:-latest}
-    volumes:
-      - ./quorum-explorer/config.json:/app/config.json
-      - ./quorum-explorer/.env:/app/.env.production
-    depends_on:
-      - rpcnode-user
-    ports:
-      - 25000:25000/tcp
-    networks:
-      besu-network:
-       ipv4_address: 172.16.239.31
+  # chain-explorer:
+  #   image: consensys/quorum-explorer:${QUORUM_EXPLORER_VERSION:-latest}
+  #   volumes:
+  #     - ./quorum-explorer/config.json:/app/config.json
+  #     - ./quorum-explorer/.env:/app/.env.production
+  #   depends_on:
+  #     - rpcnode-user
+  #   ports:
+  #     - 25000:25000/tcp
+  #   networks:
+  #     besu-network:
+  #      ipv4_address: 172.16.239.31
 
 
 volumes:
